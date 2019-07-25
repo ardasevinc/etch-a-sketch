@@ -1,5 +1,18 @@
 let gridParent = document.querySelector('.game-container')
 let gridChildren = document.querySelectorAll('.game-container div');
+let colorStat = 0;
+
+
+function generateRandomNum(end) {
+    // Generates a random whole number from 0 to end
+
+    return Math.floor(Math.random() * Math.floor(end + 1));
+}
+
+
+function generateRandomColor() {
+    return `rgb(${generateRandomNum(255)}, ${generateRandomNum(255)}, ${generateRandomNum(255)})`;
+}
 
 
 function createGridChildren(num) {
@@ -42,13 +55,33 @@ function resizeGridChildren(num) {
 }
 
 
-function colorWhenHover() {
+function colorWhenHover(colorCode) {
 
-    gridParent.addEventListener('mouseover', (e) => {
-        e.target.style.backgroundColor = 'black';
-    })
+    if (colorCode === 0) {
+        gridParent.addEventListener('mouseover', (e) => {
+            e.target.style.backgroundColor = 'black';
+        })    
+    }
 
-    console.info('hoverColor activated');
+    else if (colorCode === 1) {
+        gridParent.addEventListener('mouseover', (e) => {
+            e.target.style.backgroundColor = generateRandomColor();
+        })
+    }
+}
+
+
+function colorButtonPressed() {
+    ++colorStat;
+
+    if (colorStat % 2 === 0) {
+        colorWhenHover(0);
+    }
+
+    else if (colorStat % 2 === 1) {
+        colorWhenHover(1);
+    }
+    
 }
 
 
@@ -85,11 +118,9 @@ function changeGridSize() {
 }
 
 
-function setDefault() {
+function main() {
     createGridChildren(20);
     resizeGridChildren(20);
-    
-    colorWhenHover();
-}
 
-setDefault();
+    colorWhenHover(0);
+}
