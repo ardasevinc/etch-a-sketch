@@ -76,7 +76,7 @@ main {
     display: inline-block;
     width: calc(60vw / 9);
     height: calc(65vh / 9);
-    
+    background-color: hsl(30, 47%, 72%);
 }
 
 footer {
