@@ -124,3 +124,5 @@ function main() {
 
     colorWhenHover(0);
 }
+
+main();
