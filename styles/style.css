@@ -74,8 +74,6 @@ main {
 .game-container div {
     border: 1px solid black;
     display: inline-block;
-    width: calc(60vw / 9);
-    height: calc(65vh / 9);
     background-color: hsl(30, 47%, 72%);
 }
 
