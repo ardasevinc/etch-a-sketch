@@ -88,6 +88,8 @@ function changeGridSize() {
 function setDefault() {
     createGridChildren(20);
     resizeGridChildren(20);
+    
+    colorWhenHover();
 }
 
 setDefault();
