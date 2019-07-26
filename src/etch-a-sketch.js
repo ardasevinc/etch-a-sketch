@@ -59,81 +59,112 @@ function resizeGridChildren(num) {
 }
 
 
-function colorWhenHover(colorFlag) {
+function randomColor(e) {
+    e.target.style.backgroundColor = generateRandomColor();
+}
 
-    if (colorFlag === 0) {
-        gridParent.addEventListener('mouseover', (e) => {
-            e.target.style.backgroundColor = 'black';
-        })
-        
-        console.info('black color mode activated');
+
+function blackColor(e) {
+    e.target.style.backgroundColor = 'black';
+}
+
+
+function highlightColor(e) {
+    let targetColor = getComputedStyle(e.target).backgroundColor;
+    let rgbaInit = 'rgba(0,0,0,0.2)';
+
+    if (targetColor === 'rgb(217, 184, 150)') {
+
+        e.target.style.backgroundColor = rgbaInit;
     }
 
-    else if (colorFlag === 1) {
-        gridParent.addEventListener('mouseover', (e) => {
-            e.target.style.backgroundColor = generateRandomColor();
-        })
-
-        console.info('color mode activated')
+    else {
+        e.target.style.backgroundColor = modifyRgbaString(targetColor);
     }
 }
 
 
-function highlightWhenHover(highlightFlag) {
-    let targetColor;
-    let x=0.1;
-    let rgbString = "rgba" + "(0,0,0," + x + ')';
-    let splitRgb;
-     
+function colorWhenHover(colorFlag) {
 
-    if (highlightFlag) {
-        
-        gridParent.addEventListener('mouseover', (e) => {
-            targetColor = getComputedStyle(e.target).backgroundColor;    
-
-            if (targetColor === 'rgb(217, 184, 150)') {
-                e.target.style.backgroundColor = rgbString;
-
-                console.info(`color:${targetColor}`);
-            }
-            else {
-                if (targetColor[11] < 1) {
-                    x = targetColor[11] * 10;
-                    x += 1;
-                    x = x / 10;
-                    e.target.style.backgroundColor = rgbString;
-                }
-            }
-        });
+    if (colorFlag === 0) {
+        gridParent.addEventListener('mouseover', blackColor);
+    }
+    
+    else if (colorFlag === 1) {
+        gridParent.addEventListener('mouseover', randomColor);
     }
 
+    else if (colorFlag === 2) {
+        gridParent.addEventListener('mouseover', highlightColor);
+    }
+
+    else console.warn('colorWhenHover got an illegal colorFlag');
+}
+
+
+function modifyRgbaString(rgbaString) {
+    let rgbaPattern = /(rgba)(\(.,\s?.,\s?.,\s?)(.*)(\))/g;
+    let searchResult = rgbaPattern.exec(rgbaString);
+
+    if (searchResult !== null) {
+        // Break the string into its groups and record them
+
+        let rgba = searchResult[1];
+        let rgbColorPart = searchResult[2];
+        let alpha = searchResult[3];
+        let finalParantheses = searchResult[4];
+        let finalString = '';
+
+        if (alpha < 1) {
+            // Overcoming float arithmetic precision problem(s)
+            alpha = (10*alpha + 2) / 10;
+        }
+        // Stitch the string back together
+        finalString = rgba + rgbColorPart + alpha + finalParantheses;
+        return finalString;
+    }
     
+    else return 'rgb(0,0,0)';
 }
 
 
 function colorButtonPressed() {
+    removeAllMouseoverListeners();
     ++colorStat;
 
     if (colorStat % 2 === 0) {
+
         colorWhenHover(0);
     }
 
     else if (colorStat % 2 === 1) {
+
         colorWhenHover(1);
     }
     
 }
 
 
+function removeAllMouseoverListeners() {
+    gridParent.removeEventListener('mouseover', blackColor);
+    gridParent.removeEventListener('mouseover', randomColor);
+    gridParent.removeEventListener('mouseover', highlightColor);
+}
+
+
 function highlightButtonPressed() {
+    removeAllMouseoverListeners();
     ++highlightStat;
 
     if (highlightStat % 2 === 0) {
-        highlightWhenHover(0);
+        removeAllMouseoverListeners();
+        colorWhenHover(0);
+        console.info('highlight deactivated');
     }
 
     else if (highlightStat % 2 === 1) {
-        highlightWhenHover(1);
+        colorWhenHover(2);
+        console.info('highlight activated');
     }
 }
 
@@ -183,10 +214,11 @@ function changeGridSize() {
 
 
 function main() {
+    
     createGridChildren(20);
     resizeGridChildren(20);
 
-    console.info(`main() initialized the game with 400 grid children`);
+    colorWhenHover(0);
 }
 
 main();
