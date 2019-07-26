@@ -1,3 +1,8 @@
+// Author: Arda Sevinç
+// Website: https://ardasevinc.me/
+
+// Important variables for every function to access them
+
 let gridParent = document.querySelector('.game-container')
 let gridChildren = document.querySelectorAll('.game-container div');
 let colorStat = 0;
@@ -12,6 +17,7 @@ function generateRandomNum(end) {
 
 
 function generateRandomColor() {
+    // random rgb
     return `rgb(${generateRandomNum(255)}, ${generateRandomNum(255)}, ${generateRandomNum(255)})`;
 }
 
@@ -29,7 +35,7 @@ function createGridChildren(num) {
 
 
 function updateChildren() {
-
+    // Update children divs for accuracy
     gridChildren = document.querySelectorAll('.game-container div');
     
     console.info(`updateChildren() updated ${gridChildren.length} children`);
@@ -48,17 +54,18 @@ function removeGridChildren() {
 
 
 function resizeGridChildren(num) {
+    // Resizing children to make them fit the grid parent
     updateChildren();
 
     for (let i=0; i<gridChildren.length; i++) {
          
-        gridChildren[i].style.width = `calc(60vw / ${num})`;
+        gridChildren[i].style.width = `calc(65vw / ${num})`;
         gridChildren[i].style.height = `calc(65vh / ${num})`;
     }
     console.info(`resizeGridChildren resized ${gridChildren.length}`);
 }
 
-
+// 3 functions below are in the global scope because we need to remove listeners handled by those
 function randomColor(e) {
     e.target.style.backgroundColor = generateRandomColor();
 }
@@ -103,6 +110,8 @@ function colorWhenHover(colorFlag) {
 
 
 function modifyRgbaString(rgbaString) {
+    // Match rgba color and increase the alpha value by 0.2 if alpha is lower than 1
+
     let rgbaPattern = /(rgba)(\(.,\s?.,\s?.,\s?)(.*)(\))/g;
     let searchResult = rgbaPattern.exec(rgbaString);
 
@@ -177,8 +186,13 @@ function getSizeFromUser() {
     if (!(userWanted)) {
 
         alert('Illegal number. Try again.'); 
-        return 0;
+        return 20; // default
     } 
+
+    else if (userWanted < 0) {
+        alert('Please enter a value bigger than 0')
+        return 20; // default
+    }
 
     else {
         console.info(`getSizeFromUser() got the size ${Number(userWanted)}`);
@@ -214,7 +228,7 @@ function changeGridSize() {
 
 
 function main() {
-    
+    // Prepare for first display of the parent and the children
     createGridChildren(20);
     resizeGridChildren(20);
 
