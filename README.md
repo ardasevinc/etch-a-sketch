@@ -7,7 +7,7 @@ by hovering over them with your mouse.
 
 ## Where to access?
 
-Game is available on my [website](https://ardasevinc.me/etch-a-sketch/)
+Game is available on my [website](https://demo.ardasevinc.com/etch-a-sketch/)
 Thanks to github for github pages.
 
 ## Status
